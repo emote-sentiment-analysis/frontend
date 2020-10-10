@@ -1,0 +1,9 @@
+.text-area {
+    text-align: center;
+    outline: none;
+}
+
+.text-area[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: black; 
+}
