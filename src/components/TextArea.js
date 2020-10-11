@@ -1,47 +1,65 @@
 import React, { Component } from 'react';
-import ContentEditable from 'react-contenteditable'
+import {Editor, EditorState, CompositeDecorator} from 'draft-js';
 import backend from '../api/backend';
 
+import {PositiveSpan, NegativeSpan, MixedSpan, NeutralSpan} from './Spans'
+
+import 'draft-js/dist/Draft.css';
 import './TextArea.css';
 
 class TextArea extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { content: '', formattedContent: '' };
+        this.state = { content: '', formattedContent: '', editorState: EditorState.createEmpty() };
         this.textArea = React.createRef();
     }
 
-    componentDidMount() {
-        this.textArea.current.focus();
-    }
-
-    contentEditableChange = async event => {
-        const text = event.target.value.replace(/(<([^>]+)>)/gi, "").replace('&nbsp;', ' ');
+    onChange = async editorState => {
+        const text = editorState.getCurrentContent().getPlainText();
         if(text.endsWith('.') || text.endsWith('!') || text.endsWith('?')) {
             const response = await backend.post('/finalScore', {
                 content: text
             })
             const data = response.data.sentences;
-            var formatted = '<p>';
+            var compositeData = [];
+            var span;
             for (let i = 0; i < data.length; i++) {
-                formatted = formatted + '<span style="background-color:rgb(' + data[i].scores.negative * 255 + ',' + data[i].scores.positive * 255 + ',' + data[i].scores.neutral * 255 + ')" contenteditable="false">' + data[i].text + ' </span> ';
+                if (data[i].sentiment === 'positive') {
+                    span = PositiveSpan;
+                } else if (data[i].sentiment === 'negative') {
+                    span =  NegativeSpan;
+                } else if (data[i].sentiment === 'mixed') {
+                    span = MixedSpan;
+                } else if (data[i].sentiment === 'neutral') {
+                    span = NeutralSpan;
+                }
+                compositeData.push({
+                    strategy: (contentBlock, callback) => {
+                        if (contentBlock.getText().search(data[i].text) !== -1) {
+                            callback(contentBlock.getText().search(data[i].text), contentBlock.getText().search(data[i].text) + data[i].text.length);
+                        }                
+                    },
+                    component: span
+                    },    
+                );
             }
-            formatted = formatted + '</p>';
-            this.setState({ content: formatted, formattedContent: formatted });
+            let spanHighlight = new CompositeDecorator(compositeData);
+            this.setState({editorState: EditorState.set(editorState, {decorator: spanHighlight})});
         } else {
-            this.setState({ content: event.target.value});
+            this.setState({editorState});
+        }
+    }
+
+    spanStrategy = (contentBlock, callback) => {
+        if (contentBlock.getText().search('what') !== -1) {
+            callback(contentBlock.getText().search('what'), contentBlock.getText().search('what') + 'what'.length);
         }
     }
 
     render() { 
         return (
-            <ContentEditable className="text-area"
-                innerRef={this.textArea}
-                html={this.state.content}
-                disabled={false}
-                onChange={this.contentEditableChange}
-            />
+            <Editor editorState={this.state.editorState} onChange={this.onChange} />
         );
     }
 }
