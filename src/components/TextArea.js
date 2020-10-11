@@ -45,7 +45,7 @@ class TextArea extends Component {
                 );
             }
             let spanHighlight = new CompositeDecorator(compositeData);
-            this.setState({editorState: EditorState.set(editorState, {decorator: spanHighlight})});
+            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight})});
         } else {
             this.setState({editorState});
         }
