@@ -12,7 +12,8 @@
     "react": "^16.13.1",
     "react-contenteditable": "^3.3.5",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "semantic-ui-react": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
