@@ -51,12 +51,6 @@ class TextArea extends Component {
         }
     }
 
-    spanStrategy = (contentBlock, callback) => {
-        if (contentBlock.getText().search('what') !== -1) {
-            callback(contentBlock.getText().search('what'), contentBlock.getText().search('what') + 'what'.length);
-        }
-    }
-
     render() { 
         return (
             <Editor editorState={this.state.editorState} onChange={this.onChange} />
