@@ -5,6 +5,7 @@ import backend from '../api/backend';
 
 import 'draft-js/dist/Draft.css';
 import TextArea from './TextArea';
+import Meaning from './Meaning';
 
 class App extends Component {
     state = { editorState: EditorState.createEmpty() };
@@ -72,6 +73,7 @@ class App extends Component {
                     Sentiment Analysis
                 </h1>
                 <TextArea onChange={this.onTextAreaChange} editorState={this.state.editorState} />
+                <Meaning />
             </div>
         );
     }
