@@ -17,10 +17,6 @@ class Meaning extends Component {
     render() { 
         return ( 
             <React.Fragment>
-                <h2 className="ui center aligned icon header">
-                    What do the colors mean?
-                </h2>
-
                 <div className="ui text center aligned container">
                     <Button basic color="green" content="Positive" onClick={this.onButtonClick} />
                     <Button basic color="yellow" content="Mixed" onClick={this.onButtonClick} />

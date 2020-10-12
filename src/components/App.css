@@ -1,0 +1,11 @@
+.ui.icon.header {
+    margin: 1rem 0 .5rem;
+}
+
+.ui.buttons {
+    margin: 1rem .25em 0 0;
+}
+
+body > div:nth-child(7) {
+    z-index: 99 !important;
+}

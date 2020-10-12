@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {EditorState, CompositeDecorator} from 'draft-js';
+import {Editor, EditorState, CompositeDecorator} from 'draft-js';
 import { Popup } from 'semantic-ui-react'
 import backend from '../api/backend';
 
+import './App.css';
 import 'draft-js/dist/Draft.css';
-import TextArea from './TextArea';
 import Meaning from './Meaning';
+import Suggestion from './Suggestion';
 
 class App extends Component {
     state = { editorState: EditorState.createEmpty() };
@@ -72,7 +73,12 @@ class App extends Component {
                 <h1 className="ui center aligned icon huge header">
                     Sentiment Analysis
                 </h1>
-                <TextArea onChange={this.onTextAreaChange} editorState={this.state.editorState} />
+
+                <Editor className="text-area" editorState={this.state.editorState} onChange={this.onTextAreaChange} />
+                <Suggestion />
+                <h2 className="color-header ui center aligned icon header">
+                    What do the colors mean?
+                </h2>
                 <Meaning />
             </div>
         );
