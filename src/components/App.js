@@ -7,9 +7,10 @@ import './App.css';
 import 'draft-js/dist/Draft.css';
 import Meaning from './Meaning';
 import Suggestion from './Suggestion';
+import Hashtags from './Hashtags';
 
 class App extends Component {
-    state = { editorState: EditorState.createEmpty() };
+    state = { editorState: EditorState.createEmpty(), hashtags: [] };
 
     findWithRegex = (regex, contentBlock, callback) => {
         const text = contentBlock.getText();
@@ -60,8 +61,11 @@ class App extends Component {
                     }
                 });
             }
+            const holisticResponse = await backend.post('/score', {
+                content: text
+            }); 
             let spanHighlight = new CompositeDecorator(compositeData);
-            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight})});
+            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags: holisticResponse.data.top_tags});
         } else {
             this.setState({editorState});
         }
@@ -75,6 +79,7 @@ class App extends Component {
                 </h1>
 
                 <Editor className="text-area" editorState={this.state.editorState} onChange={this.onTextAreaChange} />
+                <Hashtags hashtags={this.state.hashtags} />
                 <Suggestion />
                 <h2 className="color-header ui center aligned icon header">
                     What do the colors mean?
