@@ -35,9 +35,9 @@ class App extends Component {
             for (let i = 0; i < data.length; i++) {
                 let color = 'none';
                 if (data[i].sentiment === 'positive') {
-                    color = 'green';
+                    color = '#21ba45';
                 } else if (data[i].sentiment === 'negative') {
-                    color = 'red';
+                    color = '#db2828';
                 } else if (data[i].sentiment === 'mixed') {
                     color = 'yellow';
                 }
