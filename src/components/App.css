@@ -6,6 +6,19 @@
     margin: 1rem .25em 0 0;
 }
 
+.DraftEditor-root {
+    margin: 0;
+    padding: .78571429em 1em;
+    border: 1px solid rgba(34,36,38,.15);
+    outline: 0;
+    color: rgba(0,0,0,.87);
+    border-radius: .28571429rem;
+    box-shadow: 0 0 0 0 transparent inset;
+    font-size: 1em;
+    line-height: 1.2857;
+    resize: vertical;
+}
+
 body > div:nth-child(7) {
     z-index: 99 !important;
 }
