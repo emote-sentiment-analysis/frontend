@@ -28,9 +28,6 @@ class App extends Component {
                 content: text
             });
             const data = response.data.sentences;
-            const holisticResponse = await backend.post('/score', {
-                content: text
-            });
             var compositeData = [];
             for (let i = 0; i < data.length; i++) {
                 let color = 'none';
@@ -41,6 +38,9 @@ class App extends Component {
                 } else if (data[i].sentiment === 'mixed') {
                     color = 'yellow';
                 }
+                let holisticResponse = await backend.post('/score', {
+                    content: data[i].text
+                });    
                 let regex = new RegExp(data[i].text, 'g');
                 compositeData.push({
                     strategy: (contentBlock, callback) => {
