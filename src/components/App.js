@@ -23,6 +23,7 @@ class App extends Component {
     };
 
     onTextAreaChange = async editorState => {
+        this.setState({editorState})
         const text = editorState.getCurrentContent().getPlainText();
         if(text.endsWith('.') || text.endsWith('!') || text.endsWith('?')) {
             const response = await backend.post('/finalScore', {
@@ -41,7 +42,7 @@ class App extends Component {
                 }
                 let holisticResponse = await backend.post('/score', {
                     content: data[i].text
-                });    
+                });
                 let regex = new RegExp(data[i].text, 'g');
                 compositeData.push({
                     strategy: (contentBlock, callback) => {
@@ -66,8 +67,6 @@ class App extends Component {
             }); 
             let spanHighlight = new CompositeDecorator(compositeData);
             this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags: holisticResponse.data.top_tags});
-        } else {
-            this.setState({editorState});
         }
     }
 
