@@ -17,6 +17,7 @@
     font-size: 1em;
     line-height: 1.2857;
     resize: vertical;
+    min-height: 15rem;
 }
 
 .popup > h4 {
