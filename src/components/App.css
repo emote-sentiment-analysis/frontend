@@ -24,6 +24,14 @@
     margin: 0rem 0 0;
 }
 
+.popup > P {
+    margin-bottom: 0;
+}
+
+.topics {
+    margin-bottom: .5rem;
+}
+
 body > div:nth-child(7) {
     z-index: 99 !important;
 }

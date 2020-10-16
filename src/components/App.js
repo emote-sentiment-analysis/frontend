@@ -106,13 +106,31 @@ class App extends Component {
                     },
                     component: (props) => {
                         return (
-                            <Popup trigger={<span {...props} style={{ backgroundColor: color }}>{props.children}</span>}> 
-                                <b>Positive Topics: </b>{positive.join(', ')}<br />
-                                <b>Negative Topics: </b>{negative.join(', ')}<br /><br />
+                            <Popup trigger={<span {...props} style={{ backgroundColor: color }}>{props.children}</span>}>
+                                {(positive.length > 0 || negative.length > 0) &&(
+                                    <div className='topics'>
+                                        {positive.length > 0 && (
+                                            <React.Fragment>
+                                                <p><b>Positive Topics: </b>{positive.join(', ')}</p>
+                                            </React.Fragment>
+                                        )}
+                                        {negative.length > 0 && (
+                                            <React.Fragment>
+                                                <p><b>Negative Topics: </b>{negative.join(', ')}</p>
+                                            </React.Fragment>
+                                        )}
+                                    </div>
+                                )}
                                 <b>Confidence Scores:</b><br />
-                                <b>Positive: </b>{data[i].scores.positive}<br />
-                                <b>Neutral: </b>{data[i].scores.neutral}<br />
-                                <b>Negative: </b>{data[i].scores.negative}
+                                {data[i].scores.positive != 0 && (
+                                    <p><b>Positive: </b>{data[i].scores.positive}</p>
+                                )}
+                                {data[i].scores.neutral != 0 && (
+                                    <p><b>Neutral: </b>{data[i].scores.neutral}</p>
+                                )}
+                                {data[i].scores.negative != 0 && (
+                                    <p><b>Negative: </b>{data[i].scores.negative}</p>
+                                )}
                             </Popup>
                         );
                     }
