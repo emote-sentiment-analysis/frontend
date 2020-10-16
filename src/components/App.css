@@ -19,6 +19,14 @@
     resize: vertical;
 }
 
+.popup > h4 {
+    margin: 0rem 0 0;
+}
+
 body > div:nth-child(7) {
+    z-index: 99 !important;
+}
+
+body > div:nth-child(8) {
     z-index: 99 !important;
 }

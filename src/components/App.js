@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Editor, EditorState, CompositeDecorator} from 'draft-js';
 import { Popup } from 'semantic-ui-react'
+import axios from 'axios';
 import backend from '../api/backend';
 
 import './App.css';
@@ -10,7 +11,7 @@ import Suggestion from './Suggestion';
 import Hashtags from './Hashtags';
 
 class App extends Component {
-    state = { editorState: EditorState.createEmpty(), hashtags: [] };
+    state = { editorState: EditorState.createEmpty(), hashtags: [], topicData: [] };
 
     findWithRegex = (regex, contentBlock, callback) => {
         const text = contentBlock.getText();
@@ -22,6 +23,30 @@ class App extends Component {
         }
     };
 
+    sortPositiveSentences(a, b) {
+        if (a.scores.positive > b.scores.positive) {
+            return -1;
+        } 
+        if (a.scores.positive < b.scores.positive) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    sortNegativeSentences(a, b) {
+        if (a.scores.negative > b.scores.negative) {
+            return -1;
+        } 
+        if (a.scores.negative < b.scores.negative) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
     onTextAreaChange = async editorState => {
         this.setState({editorState})
         const text = editorState.getCurrentContent().getPlainText();
@@ -31,8 +56,42 @@ class App extends Component {
             });
             const data = response.data.sentences;
             var compositeData = [];
+            var topicData = [];
             for (let i = 0; i < data.length; i++) {
                 let color = 'none';
+                let positive = [];
+                let negative = [];
+                let posTopics = [];
+                let negTopics = [];
+                for (let x = 0; x < data[i].aspects.length; x++) {
+                    if (data[i].aspects[x].sentiment === 'positive') {
+                        positive.push(data[i].aspects[x].text);
+                        let opinion = parseInt(data[i].aspects[x].relations[0].ref.split('/').slice(-1)[0]);
+                        posTopics.push(data[i].aspects[x].text + ' - ' + data[i].opinions[opinion].text)
+                    } else if (data[i].aspects[x].sentiment === 'negative') {
+                        negative.push(data[i].aspects[x].text);
+                        let opinion = parseInt(data[i].aspects[x].relations[0].ref.split('/').slice(-1)[0]);
+                        negTopics.push(data[i].aspects[x].text + ' - ' + data[i].opinions[opinion].text)
+                    }
+                }
+
+                var posSuggested = data[i].text;
+                var negSuggested = data[i].text;
+                for (let i = 0; posTopics.length > i; i++) {
+                    const response = await axios.get('https://api.datamuse.com/words?rel_ant=' + posTopics[i].split(' - ')[1])
+                    if (response.data.length > 0) {
+                        posSuggested = posSuggested.replace(posTopics[i].split(' - ')[1], response.data[0].word);
+                    }
+                }
+                for (let i = 0; negTopics.length > i; i++) {
+                    const response = await axios.get('https://api.datamuse.com/words?rel_ant=' + negTopics[i].split(' - ')[1])
+                    if (response.data.length > 0) {
+                        negSuggested = negSuggested.replace(negTopics[i].split(' - ')[1], response.data[0].word);
+                    }
+                }
+
+                topicData.push({ sentence: data[i], posTopics, negTopics, posSuggested: posSuggested, negSuggested })
+
                 if (data[i].sentiment === 'positive') {
                     color = '#21ba45';
                 } else if (data[i].sentiment === 'negative') {
@@ -40,9 +99,6 @@ class App extends Component {
                 } else if (data[i].sentiment === 'mixed') {
                     color = 'yellow';
                 }
-                let holisticResponse = await backend.post('/score', {
-                    content: data[i].text
-                });
                 let regex = new RegExp(data[i].text, 'g');
                 compositeData.push({
                     strategy: (contentBlock, callback) => {
@@ -51,8 +107,8 @@ class App extends Component {
                     component: (props) => {
                         return (
                             <Popup trigger={<span {...props} style={{ backgroundColor: color }}>{props.children}</span>}> 
-                                <b>Key Positive Words: </b>{holisticResponse.data.good.join(', ')}<br />
-                                <b>Key Negative Words: </b>{holisticResponse.data.bad.join(', ')}<br /><br />
+                                <b>Positive Topics: </b>{positive.join(', ')}<br />
+                                <b>Negative Topics: </b>{negative.join(', ')}<br /><br />
                                 <b>Confidence Scores:</b><br />
                                 <b>Positive: </b>{data[i].scores.positive}<br />
                                 <b>Neutral: </b>{data[i].scores.neutral}<br />
@@ -62,11 +118,12 @@ class App extends Component {
                     }
                 });
             }
+
             const holisticResponse = await backend.post('/score', {
                 content: text
-            }); 
+            });
             let spanHighlight = new CompositeDecorator(compositeData);
-            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags: holisticResponse.data.top_tags});
+            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags: holisticResponse.data.top_tags, topicData });
         }
     }
 
@@ -79,7 +136,7 @@ class App extends Component {
 
                 <Editor className="text-area" editorState={this.state.editorState} onChange={this.onTextAreaChange} />
                 <Hashtags hashtags={this.state.hashtags} />
-                <Suggestion />
+                <Suggestion data={this.state.topicData} />
                 <h2 className="color-header ui center aligned icon header">
                     What do the colors mean?
                 </h2>
