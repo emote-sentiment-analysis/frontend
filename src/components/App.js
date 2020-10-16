@@ -123,13 +123,13 @@ class App extends Component {
                                 )}
                                 <b>Confidence Scores:</b><br />
                                 {data[i].scores.positive != 0 && (
-                                    <p><b>Positive: </b>{data[i].scores.positive}</p>
+                                    <p><b>Positive: </b>{data[i].scores.positive * 100}%</p>
                                 )}
                                 {data[i].scores.neutral != 0 && (
-                                    <p><b>Neutral: </b>{data[i].scores.neutral}</p>
+                                    <p><b>Neutral: </b>{data[i].scores.neutral * 100}%</p>
                                 )}
                                 {data[i].scores.negative != 0 && (
-                                    <p><b>Negative: </b>{data[i].scores.negative}</p>
+                                    <p><b>Negative: </b>{data[i].scores.negative * 100}%</p>
                                 )}
                             </Popup>
                         );
