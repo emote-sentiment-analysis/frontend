@@ -1,15 +1,25 @@
-.ui.icon.header {
-    margin: 1rem 0 .5rem;
+.title.ui.icon.header {
+    margin: 0;
+    font-family: 'Righteous', cursive;
+    font-size: 4rem;
 }
 
 .ui.buttons {
-    margin: 1rem .25em 0 0;
+    margin: .25rem .25em 0 0;
+}
+
+.hashtags {
+    margin-top: .5rem;
+}
+
+.color-header.ui.icon {
+    margin: 2rem 0 .25rem;
 }
 
 .DraftEditor-root {
     margin: 0;
     padding: .78571429em 1em;
-    border: 1px solid rgba(34,36,38,.15);
+    border: 1.5px solid rgba(34,36,38,.15);
     outline: 0;
     color: rgba(0,0,0,.87);
     border-radius: .28571429rem;
@@ -20,8 +30,23 @@
     min-height: 15rem;
 }
 
+.public-DraftEditor-content:empty:before {
+    content: 'Start writing here...';
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+}
+  
 .popup > h4 {
     margin: 0rem 0 0;
+}
+
+.topics > h4 {
+    margin: 0rem 0 0;
+}
+
+.topics > p {
+    margin: 0 0 0;
 }
 
 .popup > P {
@@ -32,10 +57,10 @@
     margin-bottom: .5rem;
 }
 
-body > div:nth-child(7) {
+body > div:nth-child(6) {
     z-index: 99 !important;
 }
 
-body > div:nth-child(8) {
+body > div:nth-child(7) {
     z-index: 99 !important;
 }

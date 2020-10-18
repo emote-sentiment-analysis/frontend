@@ -11,7 +11,7 @@ import Suggestion from './Suggestion';
 import Hashtags from './Hashtags';
 
 class App extends Component {
-    state = { editorState: EditorState.createEmpty(), hashtags: [], topicData: [] };
+    state = { editorState: EditorState.createEmpty(), hashtags: ['Start writing! Key emotions will appear here.'], topicData: [] };
 
     findWithRegex = (regex, contentBlock, callback) => {
         const text = contentBlock.getText();
@@ -93,9 +93,9 @@ class App extends Component {
                 topicData.push({ sentence: data[i], posTopics, negTopics, posSuggested: posSuggested, negSuggested })
 
                 if (data[i].sentiment === 'positive') {
-                    color = '#21ba45';
+                    color = 'rgb(33, 186, 69, .5)';
                 } else if (data[i].sentiment === 'negative') {
-                    color = '#db2828';
+                    color = 'rgb(215, 40, 40, .5)';
                 } else if (data[i].sentiment === 'mixed') {
                     color = 'yellow';
                 }
@@ -123,13 +123,13 @@ class App extends Component {
                                 )}
                                 <b>Confidence Scores:</b><br />
                                 {data[i].scores.positive != 0 && (
-                                    <p><b>Positive: </b>{data[i].scores.positive * 100}%</p>
+                                    <p><b>Positive: </b>{Math.round(data[i].scores.positive * 100)}%</p>
                                 )}
                                 {data[i].scores.neutral != 0 && (
-                                    <p><b>Neutral: </b>{data[i].scores.neutral * 100}%</p>
+                                    <p><b>Neutral: </b>{Math.round(data[i].scores.neutral * 100)}%</p>
                                 )}
                                 {data[i].scores.negative != 0 && (
-                                    <p><b>Negative: </b>{data[i].scores.negative * 100}%</p>
+                                    <p><b>Negative: </b>{Math.round(data[i].scores.negative * 100)}%</p>
                                 )}
                             </Popup>
                         );
@@ -140,16 +140,22 @@ class App extends Component {
             const holisticResponse = await backend.post('/score', {
                 content: text
             });
+            var hashtags;
+            if (holisticResponse.data.top_tags.length <= 0 ) {
+                hashtags = ['Start writing! Key emotions will appear here.'];
+            } else {
+                hashtags = holisticResponse.data.top_tags;
+            }
             let spanHighlight = new CompositeDecorator(compositeData);
-            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags: holisticResponse.data.top_tags, topicData });
+            this.setState({editorState: EditorState.set(this.state.editorState, {decorator: spanHighlight}), hashtags, topicData });
         }
     }
 
     render() { 
         return ( 
             <div className="ui text container">
-                <h1 className="ui center aligned icon huge header">
-                    Sentiment Analysis
+                <h1 className="title ui center aligned icon huge header">
+                    Em<span style={{ color: '#21ba45' }}>o</span>te<span style={{ color: '#db2828' }}>.</span>
                 </h1>
 
                 <Editor className="text-area" editorState={this.state.editorState} onChange={this.onTextAreaChange} />

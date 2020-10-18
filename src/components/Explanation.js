@@ -23,9 +23,7 @@ class Explanation extends Component {
                         <div className="header">
                             Positive
                         </div>
-                        <div className="ui  placeholder">
-                            <p> Positive words are bright and optimistic. Positivity is determined by an Azure Machine Learning Algorithm and the SenticNet 5 database. </p>
-                        </div>
+                        <p>Positive words are bright and optimistic. Positivity is determined by an Azure Machine Learning Algorithm and the SenticNet 5 database. </p>
                     </div>
                 )}
                 {this.state.card === 'mixed' && (

@@ -20,10 +20,12 @@ class Suggestion extends Component {
                                 if (sentence.posTopics.length > 0) {
                                     return (
                                         <Popup key={index} trigger={<p>{sentence.sentence.text}</p>}>
-                                            <h4>Positive Topics:</h4>
-                                            {sentence.posTopics.map((topic, index) => {
-                                                return <p key={index}>{topic}</p>;
-                                            })}
+                                            <div className="topics">
+                                                <h4>Positive Topics:</h4>
+                                                {sentence.posTopics.map((topic, index) => {
+                                                    return <p key={index}>{topic}</p>;
+                                                })}
+                                            </div>
                                             <h4>Suggested Replacement Sentence:</h4>
                                             <p>{sentence.posSuggested}</p>
                                         </Popup>
@@ -47,10 +49,12 @@ class Suggestion extends Component {
                                 if (sentence.negTopics.length > 0) {
                                     return (
                                         <Popup key={index} trigger={<p>{sentence.sentence.text}</p>}>
-                                            <h4>Negative Topics:</h4>
-                                            {sentence.negTopics.map((topic, index) => {
-                                                return <p key={index}>{topic}</p>;
-                                            })}
+                                            <div className="topics">
+                                                <h4>Negative Topics:</h4>
+                                                {sentence.negTopics.map((topic, index) => {
+                                                    return <p key={index}>{topic}</p>;
+                                                })}
+                                            </div>
                                             <h4>Suggested Replacement Sentence:</h4>
                                             <p>{sentence.negSuggested}</p>
                                         </Popup>

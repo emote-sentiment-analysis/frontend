@@ -7,7 +7,7 @@ class Hashtags extends Component {
             return <a key={index}>{hashtag} </a>;
         })
         return (
-            <div className="ui text center aligned container">
+            <div className="hashtags ui text center aligned container">
                 {hashtags}
             </div>
         );
